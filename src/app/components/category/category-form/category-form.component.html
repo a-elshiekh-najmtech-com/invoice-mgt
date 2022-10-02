@@ -1,1 +1,22 @@
-<p>category-form works!</p>
+<form [formGroup]="form">
+    <div class="row">
+        <div class="form-group col-12">
+            <label class="form-label mt-4">Name</label>
+            <input type="text" class="form-control" formControlName="name">
+        </div>
+
+        <div class="form-group col-12">
+            <label class="form-label mt-4">Description</label>
+            <textarea class="form-control" rows="3" formControlName="description"></textarea>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" type="button" 
+            [disabled]="form.invalid || loading"
+            (click)="save()">Save</button>
+        </div>
+
+    </div>
+</form>
+
+{{form.value | json}}
