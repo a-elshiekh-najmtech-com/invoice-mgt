@@ -1,9 +1,23 @@
 <form [formGroup]="form">
     <div class="row">
-        <div class="form-group col-12">
+        <div class="form-group col-md-4 col-sm-12">
+            <label class="form-label mt-4">Category</label>
+            <select class="form-select" formControlName="categoryId">
+                <option [value]="null"></option>
+                <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-12">
             <label class="form-label mt-4">Name</label>
             <input type="text" class="form-control" formControlName="name">
         </div>
+
+        <div class="form-group col-md-4 col-sm-12">
+            <label class="form-label mt-4">Price</label>
+            <input type="number" class="form-control" formControlName="price">
+        </div>
+
 
         <div class="form-group col-12">
             <label class="form-label mt-4">Description</label>
