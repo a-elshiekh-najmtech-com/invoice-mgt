@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CategoryService } from 'src/app/services/categoy.service';
+import { takeWhile } from 'rxjs/operators';
 import { AppState } from 'src/app/state/app.state';
 import { createCategoryRequest, updateCategoryRequest } from 'src/app/state/category/category.actions';
 import { selectCategoryById, selectCategoryLoading } from 'src/app/state/category/category.selectors';
@@ -13,14 +13,17 @@ import { selectCategoryById, selectCategoryLoading } from 'src/app/state/categor
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss']
 })
-export class CategoryFormComponent implements OnInit {
+export class CategoryFormComponent implements OnInit, OnDestroy {
 
   id: number;
+
+  componentActive = true;
 
   form: FormGroup;
   loading$: Observable<boolean>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
+
 
   ngOnInit(): void {
 
@@ -28,12 +31,20 @@ export class CategoryFormComponent implements OnInit {
 
     this.id = this.route.snapshot.params.id;
     this.loading$ = this.store.select(selectCategoryLoading);
-    
+
     if (this.id) {
-      this.store.select(selectCategoryById(this.id)).subscribe(category => {
-        this.form.patchValue(category);
-      });
+      this.store
+        .pipe(
+          takeWhile(() => this.componentActive),
+          select(selectCategoryById(this.id)))
+        .subscribe(category => {
+          this.form.patchValue(category);
+        });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.componentActive = false;
   }
 
   save() {
