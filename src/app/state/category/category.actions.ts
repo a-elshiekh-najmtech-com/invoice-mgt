@@ -8,3 +8,5 @@ export const loadCategories = createAction('[Category/API] Load Categories', pro
 export const deleteCategoryRequest = createAction('[Category/API] Delete Category Request', props<{ id: number }>());
 export const deleteCategory = createAction('[Category/API] Delete Category', props<{ id: number }>());
 
+export const createCategoryRequest = createAction('[Category/API] Create Category Request', props<{ category: Category }>());
+export const createCategory = createAction('[Category/API] Create Category', props<{ category: Category }>());

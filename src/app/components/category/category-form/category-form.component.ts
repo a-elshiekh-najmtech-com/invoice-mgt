@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { CategoryService } from 'src/app/services/categoy.service';
+import { AppState } from 'src/app/state/app.state';
+import { createCategoryRequest } from 'src/app/state/category/category.actions';
 
 @Component({
   selector: 'app-category-form',
@@ -14,7 +17,7 @@ export class CategoryFormComponent implements OnInit {
 
   form: FormGroup;
   loading = false;
-  constructor(private service: CategoryService, private route: ActivatedRoute) { }
+  constructor(private store: Store<AppState>, private service: CategoryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
@@ -53,14 +56,7 @@ export class CategoryFormComponent implements OnInit {
   create() {
     if (this.form.valid && !this.loading) {
       this.loading = true;
-
-      this.service.create(this.form.value).subscribe(
-        () => {
-          this.loading = false;
-        },
-        () => {
-          this.loading = false;
-        });
+      this.store.dispatch(createCategoryRequest({ category: this.form.value }));
     }
   }
 

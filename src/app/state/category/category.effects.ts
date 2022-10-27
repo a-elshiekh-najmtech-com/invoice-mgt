@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CategoryService } from "src/app/services/categoy.service";
-import { deleteCategory, deleteCategoryRequest, loadCategories, loadCategoriesRequest } from "./category.actions";
+import { createCategory, createCategoryRequest, deleteCategory, deleteCategoryRequest, loadCategories, loadCategoriesRequest } from "./category.actions";
 import { map, mergeMap } from "rxjs/operators";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 
@@ -26,6 +26,16 @@ export class CategoriesEffects {
         mergeMap(payload =>
             this.service.delete(payload.id).pipe(
                 map(() => deleteCategory({ id: payload.id })),
+                // catchError(error => of(loadCategories.actionFailure({ error })))
+            )
+        )
+    ));
+
+    createCategory$ = createEffect(() => this.actions$.pipe(
+        ofType(createCategoryRequest),
+        mergeMap(payload =>
+            this.service.create(payload.category).pipe(
+                map(category => createCategory({ category })),
                 // catchError(error => of(loadCategories.actionFailure({ error })))
             )
         )
