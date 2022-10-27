@@ -1,20 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/categoy.service';
-import { BaseFormComponent } from '../../base-form.component';
 
 @Component({
   selector: 'app-category-form',
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss']
 })
-export class CategoryFormComponent extends BaseFormComponent<Category> {
+export class CategoryFormComponent implements OnInit {
 
-  constructor(service: CategoryService, route: ActivatedRoute) {
-    super(service, route);
+  id: number;
+
+  form: FormGroup;
+  loading = false;
+  constructor(private service: CategoryService, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+
+    this.initializeForm();
+
+    this.id = this.route.snapshot.params.id;
+
+    if (this.id) {
+      this.service.get(this.id).subscribe(category => {
+        this.form.patchValue(category);
+      });
+    }
   }
+
+  save() {
+    if (this.id)
+      this.update();
+    else
+      this.create();
+  }
+
+  update() {
+    if (this.form.valid && !this.loading) {
+      this.loading = true;
+
+      this.service.update(this.id, this.form.value).subscribe(
+        () => {
+          this.loading = false;
+        },
+        () => {
+          this.loading = false;
+        });
+    }
+  }
+
+  create() {
+    if (this.form.valid && !this.loading) {
+      this.loading = true;
+
+      this.service.create(this.form.value).subscribe(
+        () => {
+          this.loading = false;
+        },
+        () => {
+          this.loading = false;
+        });
+    }
+  }
+
 
   initializeForm() {
     this.form = new FormGroup({
