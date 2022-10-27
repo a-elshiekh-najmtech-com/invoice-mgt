@@ -14,6 +14,8 @@ import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { ProductListComponent } from './components/product/product-list/product-list.component';
 import { reducers } from './state/app.state';
+import { EffectsModule } from '@ngrx/effects';
+import { CategoriesEffects } from './state/category/category.effects';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,10 @@ import { reducers } from './state/app.state';
     StoreModule.forFeature("State", reducers),
 
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+
+    EffectsModule.forRoot([
+      CategoriesEffects
+    ]),
   ],
   providers: [],
   bootstrap: [AppComponent]

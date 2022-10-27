@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/categoy.service';
 import { AppState } from 'src/app/state/app.state';
-import { loadCategories } from 'src/app/state/category/category.actions';
+import { loadCategories, loadCategoriesRequest } from 'src/app/state/category/category.actions';
 import { selectCategories } from 'src/app/state/category/category.selectors';
 
 @Component({
@@ -15,14 +15,11 @@ import { selectCategories } from 'src/app/state/category/category.selectors';
 export class CategoryListComponent implements OnInit {
 
   categories$: Observable<Category[]>;
-  constructor(private categoryService: CategoryService, private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>) { 
+    this.store.dispatch(loadCategoriesRequest());
+  }
 
   ngOnInit(): void {
-    this.categoryService.getAll().subscribe(categories => {
-      this.store.dispatch(loadCategories({ categories }));
-    });
-
-
     this.categories$ = this.store.select(selectCategories);
   }
 
