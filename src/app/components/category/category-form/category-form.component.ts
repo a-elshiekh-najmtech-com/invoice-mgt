@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { CategoryService } from 'src/app/services/categoy.service';
 import { AppState } from 'src/app/state/app.state';
 import { createCategoryRequest } from 'src/app/state/category/category.actions';
+import { selectCategoryById } from 'src/app/state/category/category.selectors';
 
 @Component({
   selector: 'app-category-form',
@@ -26,7 +27,7 @@ export class CategoryFormComponent implements OnInit {
     this.id = this.route.snapshot.params.id;
 
     if (this.id) {
-      this.service.get(this.id).subscribe(category => {
+      this.store.select(selectCategoryById(this.id)).subscribe(category => {
         this.form.patchValue(category);
       });
     }
