@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { AppState } from 'src/app/state/app.state';
 import { deleteCategoryRequest, loadCategoriesRequest } from 'src/app/state/category/category.actions';
-import { selectCategories, selectCategoryTotal } from 'src/app/state/category/category.selectors';
+import { selectCategories, selectCategoryLoading, selectCategoryTotal } from 'src/app/state/category/category.selectors';
 
 @Component({
   selector: 'app-category-list',
@@ -13,7 +13,8 @@ import { selectCategories, selectCategoryTotal } from 'src/app/state/category/ca
   styleUrls: ['./category-list.component.scss']
 })
 export class CategoryListComponent implements OnInit {
-
+  
+  loading$: Observable<boolean>;
   categories$: Observable<Category[]>;
   constructor(private store: Store<AppState>) {
   }
@@ -27,6 +28,7 @@ export class CategoryListComponent implements OnInit {
     });
 
     this.categories$ = this.store.select(selectCategories);
+    this.loading$ = this.store.select(selectCategoryLoading);
 
 
   }
