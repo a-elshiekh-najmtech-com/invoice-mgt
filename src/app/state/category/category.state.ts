@@ -9,7 +9,6 @@ export enum RequestState {
 }
 
 export interface CategoryState extends EntityState<Category> {
-    loading: boolean,
     request: RequestState
 
 }
