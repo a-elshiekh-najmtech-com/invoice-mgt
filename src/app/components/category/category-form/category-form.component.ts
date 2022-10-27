@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { filter, skip, takeWhile } from 'rxjs/operators';
 import { AppState } from 'src/app/state/app.state';
 import { createCategoryRequest, updateCategoryRequest } from 'src/app/state/category/category.actions';
-import { selectCategoryById, selectCategoryLoading } from 'src/app/state/category/category.selectors';
+import { selectCategoryById, selectCategoryLoading, selectCategoryRequest } from 'src/app/state/category/category.selectors';
+import { RequestState } from 'src/app/state/category/category.state';
 
 @Component({
   selector: 'app-category-form',
@@ -22,7 +23,7 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading$: Observable<boolean>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -41,6 +42,18 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
           this.form.patchValue(category);
         });
     }
+
+
+    this.store.pipe(
+      takeWhile(() => this.componentActive),
+      select(selectCategoryRequest),
+      skip(1),
+      filter(x => x == RequestState.success)
+    ).subscribe(request => {
+      this.router.navigate(["/categories"]);
+    });
+
+
   }
 
   ngOnDestroy(): void {
