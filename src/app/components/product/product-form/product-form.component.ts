@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
-import { CategoryService } from 'src/app/services/categoy.service';
 import { ProductService } from 'src/app/services/product.service';
+import { AppState } from 'src/app/state/app.state';
+import { loadCategoriesRequest } from 'src/app/state/category/category.actions';
+import { selectCategories, selectCategoryTotal } from 'src/app/state/category/category.selectors';
 import { BaseFormComponent } from '../../base-form.component';
 
 @Component({
@@ -16,9 +21,9 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
 
 
 
-  categories: Category[];
+  categories$: Observable<Category[]>;
 
-  constructor(service: ProductService, private categoryService: CategoryService, route: ActivatedRoute) {
+  constructor(private store: Store<AppState>, service: ProductService, route: ActivatedRoute) {
     super(service, route);
   }
 
@@ -31,7 +36,12 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
       description: new FormControl(""),
     });
 
-    this.categoryService.getAll().subscribe(categories => this.categories = categories);
+    this.store.pipe(take(1), select(selectCategoryTotal)).subscribe(total => {
+      if (total == 0)
+        this.store.dispatch(loadCategoriesRequest());
+    });
+
+    this.categories$ = this.store.select(selectCategories);
 
   }
 
