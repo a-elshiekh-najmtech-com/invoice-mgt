@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { CategoryService } from 'src/app/services/categoy.service';
 import { AppState } from 'src/app/state/app.state';
-import { createCategoryRequest } from 'src/app/state/category/category.actions';
-import { selectCategoryById } from 'src/app/state/category/category.selectors';
+import { createCategoryRequest, updateCategoryRequest } from 'src/app/state/category/category.actions';
+import { selectCategoryById, selectCategoryLoading } from 'src/app/state/category/category.selectors';
 
 @Component({
   selector: 'app-category-form',
@@ -17,15 +18,17 @@ export class CategoryFormComponent implements OnInit {
   id: number;
 
   form: FormGroup;
-  loading = false;
-  constructor(private store: Store<AppState>, private service: CategoryService, private route: ActivatedRoute) { }
+  loading$: Observable<boolean>;
+
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
     this.initializeForm();
 
     this.id = this.route.snapshot.params.id;
-
+    this.loading$ = this.store.select(selectCategoryLoading);
+    
     if (this.id) {
       this.store.select(selectCategoryById(this.id)).subscribe(category => {
         this.form.patchValue(category);
@@ -41,22 +44,13 @@ export class CategoryFormComponent implements OnInit {
   }
 
   update() {
-    if (this.form.valid && !this.loading) {
-      this.loading = true;
-
-      this.service.update(this.id, this.form.value).subscribe(
-        () => {
-          this.loading = false;
-        },
-        () => {
-          this.loading = false;
-        });
+    if (this.form.valid) {
+      this.store.dispatch(updateCategoryRequest({ category: this.form.value }));
     }
   }
 
   create() {
-    if (this.form.valid && !this.loading) {
-      this.loading = true;
+    if (this.form.valid) {
       this.store.dispatch(createCategoryRequest({ category: this.form.value }));
     }
   }

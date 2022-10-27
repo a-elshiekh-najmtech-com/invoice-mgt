@@ -12,8 +12,10 @@
 
         <div class="mt-4 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" type="button" 
-            [disabled]="form.invalid || loading"
-            (click)="save()">Save</button>
+            [disabled]="form.invalid || (loading$ | async)"
+            (click)="save()">
+            
+            Save</button>
         </div>
 
     </div>

@@ -20,3 +20,4 @@ export const selectCategories = createSelector(selectCategoriesState, selectAll)
 export const selectCategoryTotal = createSelector(selectCategoriesState, selectTotal);
 export const selectCategoryById = (id) => createSelector(selectCategoryEntities, categories => categories[id]);
 
+export const selectCategoryLoading = createSelector(selectCategoriesState, state => state.loading);
