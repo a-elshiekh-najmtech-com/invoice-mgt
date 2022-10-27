@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
-import { CategoryService } from 'src/app/services/categoy.service';
 import { AppState } from 'src/app/state/app.state';
-import { loadCategories, loadCategoriesRequest } from 'src/app/state/category/category.actions';
+import { deleteCategoryRequest, loadCategoriesRequest } from 'src/app/state/category/category.actions';
 import { selectCategories } from 'src/app/state/category/category.selectors';
 
 @Component({
@@ -15,7 +14,7 @@ import { selectCategories } from 'src/app/state/category/category.selectors';
 export class CategoryListComponent implements OnInit {
 
   categories$: Observable<Category[]>;
-  constructor(private store: Store<AppState>) { 
+  constructor(private store: Store<AppState>) {
     this.store.dispatch(loadCategoriesRequest());
   }
 
@@ -24,11 +23,9 @@ export class CategoryListComponent implements OnInit {
   }
 
   delete(id) {
-    // if (confirm("Delete Category?")) {
-    //   this.categoryService.delete(id).subscribe(() => {
-    //     this.categories = this.categories.filter(x => x.id != id);
-    //   });
-    // }
+    if (confirm("Delete Category?")) {
+      this.store.dispatch(deleteCategoryRequest({ id }));
+    }
   }
 }
 

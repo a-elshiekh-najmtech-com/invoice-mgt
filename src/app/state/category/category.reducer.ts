@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from "@ngrx/store";
-import { loadCategories } from './category.actions';
+import { deleteCategory, loadCategories } from './category.actions';
 import { categoryAdapter, CategoryState } from "./category.state";
 
 
@@ -11,6 +11,12 @@ export const reducer = createReducer(
     on(loadCategories, (state, { categories }) => {
         return categoryAdapter.setAll(categories, state);
     }),
+
+
+    on(deleteCategory, (state, { id }) => {
+        return categoryAdapter.removeOne(id, state);
+    }),
+
 );
 
 export function categoriesReducer(state: CategoryState | undefined, action: Action) {
