@@ -9,7 +9,7 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { AppState } from 'src/app/state/app.state';
 import { loadCategoriesRequest } from 'src/app/state/category/category.actions';
-import { selectCategories, selectCategoryTotal } from 'src/app/state/category/category.selectors';
+import { selectCategories, selectCategoryLoading, selectCategoryTotal } from 'src/app/state/category/category.selectors';
 import { BaseFormComponent } from '../../base-form.component';
 
 @Component({
@@ -22,6 +22,7 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
 
 
   categories$: Observable<Category[]>;
+  categoriesLoading$: Observable<boolean>;
 
   constructor(private store: Store<AppState>, service: ProductService, route: ActivatedRoute) {
     super(service, route);
@@ -42,6 +43,8 @@ export class ProductFormComponent extends BaseFormComponent<Product> {
     });
 
     this.categories$ = this.store.select(selectCategories);
+    this.categoriesLoading$ = this.store.select(selectCategoryLoading);
+    
 
   }
 
