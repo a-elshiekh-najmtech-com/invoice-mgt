@@ -1,27 +1,22 @@
 import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { WidgetModulesLoaderService } from './widget-modules-loader.service';
 
-@Injectable({providedIn:"root"})
+@Injectable({ providedIn: "root" })
 export class WidgetsLoaderService {
     constructor(private moduleLoader: WidgetModulesLoaderService, private injector: Injector) { }
 
 
     async getComponetRef(moduleName: string, componentSelector: string) {
 
-        var compiledModule = await this.moduleLoader.loadModuleByName(moduleName);
-        console.log(`compiled Module: ${moduleName} `,compiledModule);
+        var compiled = await this.moduleLoader.loadModuleByName(moduleName);
 
-        if (compiledModule == null) {
+        if (compiled == null || compiled.module == null) {
             throw `Couldn't load Module With Key ${moduleName}`;
         }
 
-        const module = compiledModule.ngModuleFactory.create(this.injector);
-        console.log(`moduleName: ${moduleName} `,module);
+        const module = compiled.module.ngModuleFactory.create(this.injector);
 
-        var factories = compiledModule.componentFactories.map(x=>x.selector);
-        console.log(`components: ${moduleName} `,factories);
-
-        const component = compiledModule.componentFactories.find(c => c.selector === componentSelector)
+        const component = compiled.components[componentSelector];
 
         if (component == null) {
             throw `Dashboard Widget with selector ${componentSelector} not found!`;

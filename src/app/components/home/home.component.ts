@@ -1,4 +1,6 @@
 import { Component, ComponentRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { WidgetDirective } from 'src/app/directives/widget.directive';
+import { IBaseWidget } from 'src/app/models/IBaseWidget';
 import { WidgetsLoaderService } from 'src/app/services/dynamic-loader.service';
 
 @Component({
@@ -9,6 +11,8 @@ import { WidgetsLoaderService } from 'src/app/services/dynamic-loader.service';
 export class HomeComponent implements OnInit {
 
   @ViewChild('widget', { read: ViewContainerRef }) _container: ViewContainerRef;
+  @ViewChild(WidgetDirective, { static: true }) widgetHost!: WidgetDirective;
+
   compRef: ComponentRef<any>;
 
   instance: any;
@@ -19,11 +23,16 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     let loader = await this.loader.getComponetRef("dynamic", "app-dynamic");
-    this.compRef = this._container.createComponent(loader.component, null, null, null, loader.module)
+
+    const viewContainerRef = this.widgetHost.viewContainerRef;
+    viewContainerRef.clear();
+    const componentRef = viewContainerRef.createComponent<IBaseWidget>((loader.component as any));
+
+    // this.compRef = this._container.createComponent(loader.component, null, null, null, loader.module)
   }
 
   ngOnDestroy(): void {
-   
+
     if (this.compRef) {
       this.compRef.destroy();
     }

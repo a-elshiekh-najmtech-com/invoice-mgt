@@ -1,8 +1,9 @@
-import { Compiler, CompilerFactory, COMPILER_OPTIONS, NgModule } from '@angular/core';
+import { Compiler, CompilerFactory, COMPILER_OPTIONS, ComponentFactory, NgModule, Type } from '@angular/core';
 import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
 
 import { CommonModule } from '@angular/common';
 import { DynamicComponent } from './components/dynamic/dynamic.component';
+import { IBaseWidget } from 'src/app/models/IBaseWidget';
 
 
 export function createCompiler(compilerFactory: CompilerFactory) {
@@ -11,6 +12,12 @@ export function createCompiler(compilerFactory: CompilerFactory) {
 
 @NgModule({
   declarations: [
+    DynamicComponent
+  ],
+  entryComponents: [
+    DynamicComponent
+  ],
+  exports: [
     DynamicComponent
   ],
   imports: [
@@ -23,3 +30,8 @@ export function createCompiler(compilerFactory: CompilerFactory) {
   ]
 })
 export class DynamicModule { }
+
+
+export const components: { [name: string]: Type<IBaseWidget> } = {
+  "app-dynamic": DynamicComponent
+}

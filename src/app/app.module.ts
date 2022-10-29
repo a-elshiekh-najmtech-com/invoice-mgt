@@ -17,6 +17,7 @@ import { reducers } from './state/app.state';
 import { EffectsModule } from '@ngrx/effects';
 import { CategoriesEffects } from './state/category/category.effects';
 import { HomeComponent } from './components/home/home.component';
+import { WidgetDirective } from './directives/widget.directive';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { HomeComponent } from './components/home/home.component';
     CategoryFormComponent,
     ProductListComponent,
     ProductFormComponent,
-    HomeComponent
+    HomeComponent,
+    WidgetDirective
   ],
   imports: [
     BrowserModule,
