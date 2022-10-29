@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
 
     const viewContainerRef = this.widgetHost.viewContainerRef;
     viewContainerRef.clear();
-    const componentRef = viewContainerRef.createComponent<IBaseWidget>((loader.component as any));
+    const componentRef = viewContainerRef.createComponent<IBaseWidget>(loader);
 
     // this.compRef = this._container.createComponent(loader.component, null, null, null, loader.module)
   }
