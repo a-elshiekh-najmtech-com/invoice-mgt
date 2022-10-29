@@ -16,6 +16,7 @@ import { ProductListComponent } from './components/product/product-list/product-
 import { reducers } from './state/app.state';
 import { EffectsModule } from '@ngrx/effects';
 import { CategoriesEffects } from './state/category/category.effects';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CategoriesEffects } from './state/category/category.effects';
     CategoryListComponent,
     CategoryFormComponent,
     ProductListComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
